@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetic Prediction</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
+
+        :root{
+            --red:#FF4F5B;
+        }
+
+        *{
+            font-family: 'Roboto', sans-serif;
+            margin:0; padding:0;
+            box-sizing: border-box;
+            outline: none; border:none;
+            text-decoration: none;
+            transition:all .3s cubic-bezier(.16,.8,.62,1.52);
+            text-transform: capitalize;
+        }
+
+        *::selection{
+            background:var(--red);
+            color:#fff;
+        }
+
+        html{
+            font-size: 62.5%;
+            overflow-x: hidden;
+        }
+
+        html::-webkit-scrollbar{
+            width:1.3rem;
+        }
+
+        html::-webkit-scrollbar-track{
+            background: #000;
+        }
+
+        html::-webkit-scrollbar-thumb{
+            background: var(--red);
+        }
+
+        body{
+            background:#f9f9f9;
+        }
+
+        section{
+            min-height: 100vh;
+            padding:0 7%;
+            padding-top: 9rem;
+        }
+
+        .btn{
+            display: inline-block;
+            margin-top: 1rem;
+            padding:1rem 4rem;
+            border-radius: 5rem;
+            background:var(--red);
+            color:#fff;
+            overflow: hidden;
+            position: relative;
+            z-index: 0;
+            font-size: 1.7rem;
+        }
+
+        .btn::before{
+            content:'';
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
+            background:#444;
+            clip-path: polygon(0 0, 100% 0, 0 0, 0% 100%);
+            transition:.3s linear;
+        }
+
+        .btn:hover::before{
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .heading{
+            font-size: 3rem;
+            color:#666;
+        }
+
+        .heading span{
+            color:var(--red);
+        }
+
+
+        header{
+            width:100%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top:0; left: 0;
+            z-index: 1000;
+            padding:2.5rem 7%;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+        }
+
+        header .logo{
+            font-size: 2.5rem;
+            color:#666;
+        }
+
+        header .logo span{
+            color:var(--red);
+        }
+
+        header .navbar ul{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            list-style: none;
+        }
+
+        header .navbar ul li{
+            margin-left: 2.5rem;
+        }
+
+        header .navbar ul li a{
+            color:#999;
+            font-size: 2rem;
+        }
+
+        header .navbar ul li a.active,
+        header .navbar ul li a:hover{
+            color:var(--red);
+            border-bottom: .2rem solid var(--red);
+            padding:.7rem 0;
+        }
+
+        #menu{
+            font-size: 3rem;
+            color:#999;
+            cursor: pointer;
+            display: none;
+        }
+
+        .home{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .home .image{
+            flex:1 1 40rem;
+        }
+
+        .home .image img{
+            width:100%;
+        }
+
+        .home .content{
+            flex:1 1 40rem;
+        }
+
+        .home .content span{
+            color:var(--red);
+            font-size: 2.5rem;
+        }
+
+        .home .content h3{
+            color:#666;
+            font-size: 5rem;
+        }
+
+        .home .content p{
+            color:#999;
+            font-size: 2rem;
+            padding:1rem 0;
+        }
+
+        .protect .heading{
+            text-align: center;
+            padding:1rem;
+        }
+
+        .protect .box-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .protect .box-container .box{
+            background:#fff;
+            border:.1rem solid rgba(0,0,0,.1);
+            padding:2rem;
+            margin:2rem;
+            width:34rem;
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+            text-align: center;
+        }
+
+        .protect .box-container .box img{
+            height: 17rem;
+            width:17rem;
+        }
+
+        .protect .box-container .box h3{
+            font-size: 2.5rem;
+            color:#666;
+            padding:1rem 0;
+        }
+
+        .protect .box-container .box p{
+            font-size: 1.4rem;
+            color:#999;
+            padding:.5rem;
+        }
+
+        .protect .box-container .box:hover{
+            transform:translateY(-1rem);
+        }
+
+        .symtoms{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .symtoms .content{
+            flex:1 1 40rem;
+        }
+
+        .symtoms .image{
+            flex:1 1 40rem;
+        }
+
+        .symtoms .image img{
+            width:100%;
+        }
+
+        .symtoms .content p{
+            font-size: 1.5rem;
+            color:#999;
+            padding:1rem 0;
+        }
+
+        .symtoms .content ul{
+            display: flex;
+            flex-wrap: wrap;
+            padding:1rem 0;
+        }
+
+        .symtoms .content ul .two{
+            padding-left: 4.5rem;
+        }
+
+        .symtoms .content ul li{
+            margin-left: 2rem;
+            font-size: 1.5rem;
+            color:#666;
+            padding: .5rem 0;
+        }
+
+        .prevent{
+            background:#222;
+        }
+
+        .prevent .row{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding:2rem 0;
+        }
+
+        .prevent .row .image{
+            flex:1 1 37rem;
+            height:35rem;
+            text-align: center;
+        }
+
+        .prevent .row .image img{
+            height:100%;
+            width:100%;
+            object-fit: cover;
+        }
+
+        .prevent .row .content{
+            padding:2rem 0;
+            flex:1 1 37rem;
+        }
+
+        .prevent .row .content .heading{
+            color:#fff;
+        }
+
+        .prevent .row .content p{
+            font-size: 1.7rem;
+            color:#aaa;
+            padding:1rem 0;
+        }
+
+        .prevent .row .content ul li{
+            margin-left: 2rem;
+            font-size: 1.5rem;
+            color:#aaa;
+            padding:.5rem 0;
+        }
+
+        .handwash .heading{
+            text-align: center;
+            padding:1rem;
+        }
+
+        .handwash .box-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .handwash .box-container .box{
+            background:#fff;
+            border:.1rem solid rgba(0,0,0,.1);
+            margin:2rem;
+            margin-top: 3rem;
+            padding:2rem 3.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .handwash .box-container .box img{
+            height:17rem;
+            width:17rem;
+        }
+
+        .handwash .box-container .box h3{
+            font-size: 2rem;
+            color:#666;
+            padding:1rem 0;
+        }
+
+        .handwash .box-container .box span{
+            display: block;
+            position: absolute;
+            top:-2rem; left:-2rem;
+            height:5rem; width:5rem;
+            line-height: 5rem;
+            font-size: 2rem;
+            color:#fff;
+            background:var(--red);
+            border-radius: 5rem;
+        }
+
+        .spread .heading{
+            text-align: center;
+            padding:1rem;
+        }
+
+        .spread .image{
+            height: 80vh;
+            width:100%;
+            background:url(../images/map.png) no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .footer{
+            min-height: auto;
+            padding-top: 0;
+            background:#333;
+        }
+
+        .footer .box-container{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer .box-container .box{
+            flex:1 1 25rem;
+            margin:2rem;
+        }
+
+        .footer .box-container .box h3{
+            font-size: 2.5rem;
+            color:#fff;
+            padding-bottom: 2rem;
+            font-weight: normal;
+        }
+
+        .footer .box-container .box p{
+            font-size: 1.5rem;
+            color:#ccc;
+            padding:1rem 0;
+        }
+
+        .footer .box-container .box p i{
+            padding-right: 1rem;
+            color:var(--red);
+        }
+
+        .footer .box-container .box a{
+            font-size: 1.5rem;
+            color:#ccc;
+            padding:1rem 0;
+            display: block;
+        }
+
+        .footer .box-container .box a:hover{
+            color:var(--red);
+        }
+
+        .footer .box-container .box .share{
+            display: flex;
+            flex-wrap: wrap;
+            padding:1rem 0;
+        }
+
+        .footer .box-container .box .share a{
+            height:4rem;
+            width:4rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 5rem;
+            border:.1rem solid #fff3;
+            margin-right: 1rem;
+        }
+
+        .footer .box-container .box .share a:hover{
+            background:#fff;
+        }
+
+        .footer .credit{
+            padding:2rem 1rem;
+            text-align: center;
+            color:#fff;
+            font-weight: normal;
+            font-size: 2rem;
+            border-top: .1rem solid #fff3;
+        }
+
+        .footer .credit a{
+            color:var(--red);
+        }
+
+        .scroll-top{
+            position: fixed;
+            bottom:7.5rem; right:2rem;
+            z-index: 100;
+            display: none;
+        }
+
+        .scroll-top img{
+            height: 7rem;
+        }
+
+
+        /* media queries  */
+
+        @media (max-width:991px){
+
+            html{
+                font-size: 55%;
+            }
+
+        }
+
+        @media (max-width:768px){
+
+            #menu{
+                display: block;
+            }
+
+            header .navbar{
+                position: fixed;
+                top:8rem; left:-120%;
+                height: 100%;
+                width:100%;
+                background:#eee;
+                border-top: .2rem solid rgba(0,0,0,.1);
+            }
+
+            header .navbar ul{
+                flex-flow: column;
+                padding:2rem;
+            }
+
+            header .navbar ul li{
+                text-align: center;
+                width:100%;
+                margin:1rem 0;
+            }
+
+            header .navbar ul li a{
+                display: block;
+                padding:1rem;
+            }
+
+            header .navbar ul li a.active,
+            header .navbar ul li a:hover{
+                padding:1rem;
+                background:var(--red);
+                color:#fff;
+                border:none;
+                border-radius: 5rem;
+            }
+
+            .fa-times{
+                transform: rotate(180deg);
+            }
+
+            header .navbar.nav-toggle{
+                left:0;
+            }
+
+            .home .content{
+                text-align: center;
+            }
+
+            .prevent .row:last-child{
+                flex-flow: column-reverse;
+            }
+
+        }
+
+        @media (max-width:500px){
+
+            html{
+                font-size: 50%;
+            }
+
+            section{
+                padding:0 3%;
+                padding-top: 9rem;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    
+<!-- header section starts  -->
+
+<header>
+
+    <a href="#" class="logo">Diabetes Awareness</a>
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+        <ul>
+            <li><a class="active" href="#home">home</a></li>
+            <li><a href="/predict">predict</a></li>
+            <li><a href="#symtoms">symptoms</a></li>
+            <li><a href="#prevent">Care</a></li>
+        </ul>
+    </nav>
+
+</header>
+
+<!-- header section ends -->
+
+<!-- home section starts  -->
+
+<section class="home" id="home">
+
+    <div class="content">
+
+        <span>Diabetes</span>
+        <h3>Stop Diabetes before it starts.</h3>
+        <p> According to the report of WHO, in 2018, 
+        Diabetes is one of growing chronic life threatening 
+        disease that have affected 422 million people.The early diagnosis of diabetes is only 
+        possible by proper assessment of both common and less common sign symptoms, 
+        which could be found in different phases from disease initiation up to diagnosis. </p>
+        <a href="/predict" class="btn">predict now</a>
+
+    </div>
+
+
+</section>
+
+<!-- home section ends -->
+
+
+<!-- symtoms section starts  -->
+
+<section class="symtoms" id="symtoms">
+
+    <div class="content">
+        <h1 class="heading">What Are The Main <span>Symptoms?</span></h1>
+        <p>Diabetes is a disease that occurs when your blood glucose, 
+        also called blood sugar, is too high. Blood glucose is your main source 
+        of energy and comes from the food you eat.</p>
+        <ul>
+            <div class="one">
+                <li>Urinate a lot, often at night</li>
+                <li>Are very thirsty</li>
+                <li>Lose weight without trying</li>
+            </div>
+            <div class="two">
+                <li>Are very hungry</li>            
+                <li>Have blurry vision</li>
+                <li>Have numb or tingling hands or feet</li>
+            </div>
+        </ul>
+    </div>
+
+</section>
+
+<!-- symtoms section ends -->
+
+<!-- prevent section starts  -->
+
+<section class="prevent" id="prevent">
+
+    <div class="row">
+
+
+        <div class="content">
+            <h1 class="heading">things to be followed when you are Diabetic</h1>
+            
+            <ul>
+                <li>Make a commitment to managing your diabetes</li>
+                <li>Don't smoke</li>
+                <li>Keep your blood pressure and cholesterol under control</li>
+                <li>Schedule regular physicals and eye exams</li>
+                <li>Keep your vaccines up to date</li>
+                <li>Take care of your teeth</li>
+                <li>Pay attention to your feet</li>
+            </ul>
+        </div>
+
+    </div>
+
+    
+</section>
+
+<!-- prevent section ends -->
+
+
+
+<!-- footer section starts  -->
+
+<section class="footer">
+
+    <div class="box-container">
+        <div class="box">
+            <div class="share">
+                <a href="#" class="fab fa-linkedin"></a>
+                <a href="#" class="fab fa-github"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- footer section ends -->
+
+<!-- scroll top  -->
+
+<a href="#home" class="scroll-top">
+    <img src="images/scroll-img.png" alt="">
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- jquery cdn link  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- custom js file link  -->
+<script src="script.js">
+$(document).ready(function(){
+
+    $('#menu').click(function(){
+        $(this).toggleClass('fa-times');
+        $('.navbar').toggleClass('nav-toggle');
+    });
+
+    $(window).on('scroll load',function(){
+
+      $('#menu').removeClass('fa-times');
+      $('.navbar').removeClass('nav-toggle');
+
+      if($(window).scrollTop() > 0){
+        $('.scroll-top').show();
+      }else{
+        $('.scroll-top').hide();
+      }
+
+      // scroll spy 
+
+      
+    $('section').each(function(){
+
+      let height = $(this).height();
+      let offset = $(this).offset().top - 200;
+      let id = $(this).attr('id');
+      let top = $(window).scrollTop();
+
+      if(top > offset && top < offset + height){
+        $('.navbar ul li a').removeClass('active')
+        $('.navbar').find(`[href="#${id}"]`).addClass('active');
+      }
+
+    });
+
+    });
+
+    // smooth scrolling
+
+    $('a[href*="#"]').on('click',function(e){
+
+      e.preventDefault();
+
+      $('html, body').animate({
+
+        scrollTop : $($(this).attr('href')).offset().top,
+
+      },
+      500,
+      'linear'
+      )
+
+    })
+
+});
+</script>
+
+
+</body>
+</html>

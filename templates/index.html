@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Diabetic Prediction</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" type="text/css" href=" https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+
+    <style>
+        body {
+            background-color: #eee
+        }
+
+        label.radio {
+            cursor: pointer
+        }
+
+        label.radio input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            pointer-events: none
+        }
+
+        label.radio span {
+            padding: 4px 0px;
+            border: 1px solid red;
+            display: inline-block;
+            color: red;
+            width: 100px;
+            text-align: center;
+            border-radius: 3px;
+            margin-top: 7px;
+            text-transform: uppercase
+        }
+
+        label.radio input:checked+span {
+            border-color: red;
+            background-color: red;
+            color: #fff
+        }
+
+        .ans {
+            margin-left: 36px !important
+        }
+
+        .btn:focus {
+            outline: 0 !important;
+            box-shadow: none !important
+        }
+
+        .btn:active {
+            outline: 0 !important;
+            box-shadow: none !important
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
+
+        :root{
+            --red:#FF4F5B;
+        }
+
+        *{
+            font-family: 'Roboto', sans-serif;
+            margin:0; padding:0;
+            box-sizing: border-box;
+            outline: none; border:none;
+            text-decoration: none;
+            transition:all .3s cubic-bezier(.16,.8,.62,1.52);
+            text-transform: capitalize;
+        }
+
+        *::selection{
+            background:var(--red);
+            color:#fff;
+        }
+
+        html{
+            font-size: 62.5%;
+            overflow-x: hidden;
+        }
+
+        html::-webkit-scrollbar{
+            width:1.3rem;
+        }
+
+        html::-webkit-scrollbar-track{
+            background: #000;
+        }
+
+        html::-webkit-scrollbar-thumb{
+            background: var(--red);
+        }
+
+        body{
+            background:#f9f9f9;
+        }
+
+        section{
+            min-height: 100vh;
+            padding:0 7%;
+            padding-top: 9rem;
+        }
+
+        .btn{
+            display: inline-block;
+            margin-top: 1rem;
+            padding:1rem 4rem;
+            border-radius: 5rem;
+            background:var(--red);
+            color:#fff;
+            overflow: hidden;
+            position: relative;
+            z-index: 0;
+            font-size: 1.7rem;
+        }
+
+        .btn::before{
+            content:'';
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
+            background:#444;
+            clip-path: polygon(0 0, 100% 0, 0 0, 0% 100%);
+            transition:.3s linear;
+        }
+
+        .btn:hover::before{
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .heading{
+            font-size: 3rem;
+            color:#666;
+        }
+
+        .heading span{
+            color:var(--red);
+        }
+
+
+        header{
+            width:100%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top:0; left: 0;
+            z-index: 1000;
+            padding:2.5rem 7%;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+        }
+
+        header .logo{
+            font-size: 2.5rem;
+            color:#666;
+        }
+
+        header .logo span{
+            color:var(--red);
+        }
+
+        header .navbar ul{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            list-style: none;
+        }
+
+        header .navbar ul li{
+            margin-left: 2.5rem;
+        }
+
+        header .navbar ul li a{
+            color:#999;
+            font-size: 2rem;
+        }
+
+        header .navbar ul li a.active,
+        header .navbar ul li a:hover{
+            color:var(--red);
+            border-bottom: .2rem solid var(--red);
+            padding:.7rem 0;
+        }
+
+        #menu{
+            font-size: 3rem;
+            color:#999;
+            cursor: pointer;
+            display: none;
+        }
+        .footer{
+            min-height: auto;
+            padding-top: 0;
+            background:#333;
+        }
+
+        .footer .box-container{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer .box-container .box{
+            flex:1 1 25rem;
+            margin:2rem;
+        }
+
+        .footer .box-container .box h3{
+            font-size: 2.5rem;
+            color:#fff;
+            padding-bottom: 2rem;
+            font-weight: normal;
+        }
+
+        .footer .box-container .box p{
+            font-size: 1.5rem;
+            color:#ccc;
+            padding:1rem 0;
+        }
+
+        .footer .box-container .box p i{
+            padding-right: 1rem;
+            color:var(--red);
+        }
+
+        .footer .box-container .box a{
+            font-size: 1.5rem;
+            color:#ccc;
+            padding:1rem 0;
+            display: block;
+        }
+
+        .footer .box-container .box a:hover{
+            color:var(--red);
+        }
+
+        .footer .box-container .box .share{
+            display: flex;
+            flex-wrap: wrap;
+            padding:1rem 0;
+        }
+
+        .footer .box-container .box .share a{
+            height:4rem;
+            width:4rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 5rem;
+            border:.1rem solid #fff3;
+            margin-right: 1rem;
+        }
+
+        .footer .box-container .box .share a:hover{
+            background:#fff;
+        }
+
+        .footer .credit{
+            padding:2rem 1rem;
+            text-align: center;
+            color:#fff;
+            font-weight: normal;
+            font-size: 2rem;
+            border-top: .1rem solid #fff3;
+        }
+
+        .footer .credit a{
+            color:var(--red);
+        }
+
+        .scroll-top{
+            position: fixed;
+            bottom:7.5rem; right:2rem;
+            z-index: 100;
+            display: none;
+        }
+
+        .scroll-top img{
+            height: 7rem;
+        }
+
+
+        /* media queries  */
+
+        @media (max-width:991px){
+
+            html{
+                font-size: 55%;
+            }
+
+        }
+
+        @media (max-width:768px){
+
+            #menu{
+                display: block;
+            }
+
+            header .navbar{
+                position: fixed;
+                top:8rem; left:-120%;
+                height: 100%;
+                width:100%;
+                background:#eee;
+                border-top: .2rem solid rgba(0,0,0,.1);
+            }
+
+            header .navbar ul{
+                flex-flow: column;
+                padding:2rem;
+            }
+
+            header .navbar ul li{
+                text-align: center;
+                width:100%;
+                margin:1rem 0;
+            }
+
+            header .navbar ul li a{
+                display: block;
+                padding:1rem;
+            }
+
+            header .navbar ul li a.active,
+            header .navbar ul li a:hover{
+                padding:1rem;
+                background:var(--red);
+                color:#fff;
+                border:none;
+                border-radius: 5rem;
+            }
+
+            .fa-times{
+                transform: rotate(180deg);
+            }
+
+            header .navbar.nav-toggle{
+                left:0;
+            }
+
+            .home .content{
+                text-align: center;
+            }
+
+            .prevent .row:last-child{
+                flex-flow: column-reverse;
+            }
+
+        }
+
+        @media (max-width:500px){
+
+            html{
+                font-size: 50%;
+            }
+
+            section{
+                padding:0 3%;
+                padding-top: 9rem;
+            }
+
+        }
+    </style>
+   
+</head>
+
+<body>
+<!-- header section starts  -->
+
+<header>
+
+    <a href="#" class="logo">Diabetes Awareness</a>
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/predict">predict</a></li>
+        </ul>
+    </nav>
+
+</header>
+
+<!-- header section ends -->
+<section>
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-10 col-lg-10">
+       
+            <div class="border">
+                <form action="/prediction" method="POST">
+                
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row justify-content-between align-items-center mcq">
+                        <h4>Diabetic Prediction</h4>
+                    </div>
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Age</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <input type="text" name="age" id="age">
+                    </div>
+                   
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Gender</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="gender" value="1"> <span>Male</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="gender" value="0"> <span>Female</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Does your body urinates more than usual (Polyuria) ?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="polyuria" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="polyuria" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Do you feel excess thirst(polydipsia)?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="polydipsia" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="polydipsia" value="0"> <span>No</span>
+                        </label>
+                    </div>        
+                </div>
+
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Is there a sudden weight Loss in your body?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="wl" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="wl" value="0"> <span>No</span>
+                        </label>
+                    </div>        
+                </div>
+
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        <h5 class="mt-1 ml-2">weakness in the body?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="weakness" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="weakness" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Do you observe increase in your apetite(Polyphagia) ?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="Polyphagia" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="Polyphagia" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        <h5 class="mt-1 ml-2">Is anyone in your family Diabetic(Genitical Thrush) ?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="gt" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="gt" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Do you exprience blurring of your vison(visual blurring) ?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="vb" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="vb" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        <h5 class="mt-1 ml-2">Do you feel itchiy?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="itching" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="itching" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+               <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Do you feel irritated often?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="irritable" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="irritable" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Do you observe a delay in healing of wounds?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="heal" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="heal" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                    
+                        <h5 class="mt-1 ml-2">Do you feel Muscle weakness?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="muscle" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="muscle" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                
+                        <h5 class="mt-1 ml-2">Do you feel Stifness of your muscles?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="stifness" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="stifness" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                      
+                        <h5 class="mt-1 ml-2">Do you observe any hairfall(alopecia) ?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="alopecia" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="alopecia" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="question bg-white p-3 border-bottom">
+                    <div class="d-flex flex-row align-items-center question-title">
+                        
+                        <h5 class="mt-1 ml-2">Are you suffering from Obecity?</h5>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="obecity" value="1"> <span>Yes</span>
+                        </label>
+                    </div>
+                    <div class="ans ml-2">
+                        <label class="radio"> <input type="radio" name="obecity" value="0"> <span>No</span>
+                        </label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
+                    <button class="btn btn-success" type="submit">SUBMIT
+                        <i class="fa fa-angle-right ml-2"></i>
+                    </button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- footer section starts  -->
+
+<section class="footer">
+
+    <div class="box-container">
+
+        <div class="box">
+            <h3>about us</h3>
+            <p>Diabetes is a disease that occurs when your blood glucose, also called blood sugar, is too high. Blood glucose is your main source of energy and comes from the food you eat.</p>
+        </div>
+
+
+
+        <div class="box">
+            <h3>contact info</h3>
+            <p> <i class="fas fa-phone"></i> +123-456-7890. </p>
+            <p> <i class="fas fa-envelope"></i> example@gmail.com </p>
+            <p> <i class="fas fa-map-marker-alt"></i> mumbai, indai - 400104. </p>
+            <div class="share">
+                <a href="#" class="fab fa-youtube"></a>
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- footer section ends -->
+
+<!-- jquery cdn link  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- custom js file link  -->
+<script src="script.js">
+$(document).ready(function(){
+
+    $('#menu').click(function(){
+        $(this).toggleClass('fa-times');
+        $('.navbar').toggleClass('nav-toggle');
+    });
+
+    $(window).on('scroll load',function(){
+
+      $('#menu').removeClass('fa-times');
+      $('.navbar').removeClass('nav-toggle');
+
+      if($(window).scrollTop() > 0){
+        $('.scroll-top').show();
+      }else{
+        $('.scroll-top').hide();
+      }
+
+      // scroll spy 
+
+      
+    $('section').each(function(){
+
+      let height = $(this).height();
+      let offset = $(this).offset().top - 200;
+      let id = $(this).attr('id');
+      let top = $(window).scrollTop();
+
+      if(top > offset && top < offset + height){
+        $('.navbar ul li a').removeClass('active')
+        $('.navbar').find(`[href="#${id}"]`).addClass('active');
+      }
+
+    });
+
+    });
+
+    // smooth scrolling
+
+    $('a[href*="#"]').on('click',function(e){
+
+      e.preventDefault();
+
+      $('html, body').animate({
+
+        scrollTop : $($(this).attr('href')).offset().top,
+
+      },
+      500,
+      'linear'
+      )
+
+    })
+
+});
+</script>
+
+
+
+
+</body>
+
+</html>
+
+
+
+
+
+
